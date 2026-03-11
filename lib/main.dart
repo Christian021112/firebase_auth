@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+void main() {
+  runApp(const MaterialApp(home: LoginScreen()));
+}
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
   @override
@@ -8,7 +12,6 @@ class LoginScreen extends StatefulWidget {
   }
 }
 
-@override
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
