@@ -1,3 +1,6 @@
+import 'package:firebase_authentification/presentation/auth/register_screen.dart';
+import 'package:firebase_authentification/presentation/home/home_screen.dart';
+import 'package:firebase_authentification/services/auth_services.dart';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,12 +14,49 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+    try {
+      await authServicesNotifier.value.signIn(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
               const SizedBox(height: 250),
@@ -31,15 +71,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 100,
                 width: 100,
               ),
-
               Container(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  "login your account",
+                child: const Text(
+                  "Login your account",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
+              const SizedBox(height: 20),
               TextFormField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
@@ -48,23 +90,35 @@ class _LoginScreenState extends State<LoginScreen> {
                   labelText: "Email",
                   filled: true,
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) return "Email requis";
+                  if (!value.contains('@')) return "Email invalide";
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               TextFormField(
+                controller: _passwordController,
+                obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: BorderSide.none,
                   ),
-                  labelText: "password",
+                  labelText: "Password",
                   filled: true,
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) return "Mot de passe requis";
+                  if (value.length < 6) return "Minimum 6 caractères";
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _isLoading ? null : _login,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent,
                     foregroundColor: Colors.white,
@@ -72,41 +126,51 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(3),
                     ),
                   ),
-
-                  child: Text("Login", style: TextStyle(fontSize: 18)),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text("Login", style: TextStyle(fontSize: 18)),
                 ),
               ),
               const SizedBox(height: 20),
-              Text("-Or singin up with-"),
+              const Text("-Or sign in with-"),
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // centre horizontalement
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
                     onPressed: () {},
-                    icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
+                    icon: const FaIcon(FontAwesomeIcons.google, color: Colors.red),
                   ),
-
-                  SizedBox(width: 20),
-
+                  const SizedBox(width: 20),
                   IconButton(
                     onPressed: () {},
-                    icon: FaIcon(
-                      FontAwesomeIcons.facebookF,
-                      color: Colors.blue,
-                    ),
+                    icon: const FaIcon(FontAwesomeIcons.facebookF, color: Colors.blue),
                   ),
-
-                  SizedBox(width: 20),
-
+                  const SizedBox(width: 20),
                   IconButton(
                     onPressed: () {},
-                    icon: FaIcon(
-                      FontAwesomeIcons.twitter,
-                      color: Colors.lightBlue,
-                    ),
+                    icon: const FaIcon(FontAwesomeIcons.twitter, color: Colors.lightBlue),
                   ),
                 ],
+              ),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                  );
+                },
+                child: const Text(
+                  "Don't have an account? Sign up",
+                  style: TextStyle(color: Colors.blueAccent),
+                ),
               ),
             ],
           ),
