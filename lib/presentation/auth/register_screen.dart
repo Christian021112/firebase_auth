@@ -1,4 +1,6 @@
+import 'package:firebase_authentification/presentation/auth/login_screen.dart';
 import 'package:firebase_authentification/services/auth_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -35,7 +37,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      // TODO: naviguer vers la page home après inscription
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+      final message = e.code == 'email-already-in-use'
+          ? "Cette adresse email est déjà utilisée."
+          : e.message ?? "Une erreur est survenue.";
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
