@@ -2,18 +2,15 @@ import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-Future<void> main() async =>
-    runApp(MaterialApp(debugShowCheckedModeBanner: false, home: loginscreen()));
-
-class loginscreen extends StatefulWidget {
-  const loginscreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
   @override
-  State<loginscreen> createState() {
-    return _loginscreenState();
+  State<LoginScreen> createState() {
+    return _LoginScreenState();
   }
 }
 
-class _loginscreenState extends State<loginscreen> {
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
