@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-ValueNotifier<AuthServices> authServicesNotifier = ValueNotifier(AuthServices());
+ValueNotifier<AuthServices> authServicesNotifier = ValueNotifier(
+  AuthServices(),
+);
 
 class AuthServices {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -55,7 +57,7 @@ class AuthServices {
     required String email,
     required String newPassword,
     required String oldPassword,
-    }) async {
+  }) async {
     AuthCredential credential = EmailAuthProvider.credential(
       email: email,
       password: oldPassword,

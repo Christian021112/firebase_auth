@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-
 Future<void> main() async =>
     runApp(MaterialApp(debugShowCheckedModeBanner: false, home: loginscreen()));
 
 class loginscreen extends StatefulWidget {
-  const loginscreen({super.key, });
+  const loginscreen({super.key});
   @override
   State<loginscreen> createState() {
     return _loginscreenState();
@@ -19,10 +18,7 @@ class _loginscreenState extends State<loginscreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.arrow_back),
-        ),
+        leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
@@ -35,7 +31,6 @@ class _loginscreenState extends State<loginscreen> {
                   image: DecorationImage(
                     image: NetworkImage(
                       "https://cdn.prod.website-files.com/66e70ebe4f137113dd7019b2/673735fdfc88277db9455f7c_Frame%2019.png",
-                  
                     ),
                   ),
                 ),
@@ -130,7 +125,7 @@ class _loginscreenState extends State<loginscreen> {
                   ),
                 ],
               ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text("Don't have an account? Sign up"),
             ],
           ),
